@@ -1,0 +1,25 @@
+
+## Add these Variables to your regional-vars file
+
+variable "confluence_secrets_path" {
+  default     = "/production/mgmt/confluence/"
+  description = "Confleune Secrets Manager path"
+  type        = string
+}
+
+variable "confluence_cert" {
+  default     = "confluence_cert"
+  description = "Confluence certificate"
+  type        = string
+}
+
+variable "confluence_cert_key" {
+  default     = "confluence_cert_key"
+  description = "Confluence certificate key"
+  type        = string
+}
+variable "confluence_secrets_path" {
+  default     = "/production/mgmt/confluence/"
+  description = "Confleune Secrets Manager path"
+  type        = string
+}
