@@ -28,9 +28,9 @@ resource "aws_security_group" "confluence_instance_sg" {
   }
 
   ingress {
-    from_port = 8443
-    protocol  = "tcp"
-    to_port   = 8443
+    from_port   = 8443
+    protocol    = "tcp"
+    to_port     = 8443
     cidr_blocks = [
       "${var.ip_network_mgmt}.0.0/16",
       "${var.ip_network_prod}.0.0/16",
@@ -38,7 +38,6 @@ resource "aws_security_group" "confluence_instance_sg" {
 
     ]
   }
-
 
   egress {
     from_port   = 0

@@ -1,11 +1,11 @@
 terraform {
   required_version = "~>1.2.0"
   backend "s3" {
-    profile        = "imatch-mgmt"
-    bucket         = "imatch-us-gov-west-1-tf-state"
+    profile        = "launchpad-mgmt"
+    bucket         = "launchpad-us-gov-west-1-tf-state"
     region         = "us-gov-west-1"
-    key            = "imatch-us-gov-west-1-confluence-state.tfstate"
-    dynamodb_table = "imatch-us-gov-west-1-state-lock"
+    key            = "launchpad-us-gov-west-1-confluence-state.tfstate"
+    dynamodb_table = "launchpad-us-gov-west-1-state-lock"
     encrypt        = true
   }
 }

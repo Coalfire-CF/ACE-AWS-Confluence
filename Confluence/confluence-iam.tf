@@ -38,27 +38,29 @@ data "aws_iam_policy_document" "confluence_policy" {
     resources = ["arn:${var.partition}:s3:::${data.terraform_remote_state.setup.outputs.install_bucket_name}/confluence"]
   }
 
-  statement {
-    sid    = "AllowGetSecretsRootCA"
-    effect = "Allow"
-    actions = [
-      "secretsmanager:GetSecretValue",
-      "secretsmanager:DescribeSecret",
-      "secretsmanager:ListSecretVersionIds",
-      "secretsmanager:ListSecrets"
-    ]
-    resources = [
-      "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}root_ca_pub.pem*",
-      "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}confluence_cert*",
-      "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}confluence_cert_key*",
-      "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}bitbucket_cert*",
-      "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}bitbucket_cert_key*",
-      "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}jira1_cert*",
-      "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}jira1_cert_key*",
-      "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}bamboo_cert*",
-      "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}bamboo_cert_key*",
-    ]
-  }
+  ####### Uncomment if deploying other Atlassian Tools #######
+
+  #   statement {
+  #     sid    = "AllowGetSecretsRootCA"
+  #     effect = "Allow"
+  #     actions = [
+  #       "secretsmanager:GetSecretValue",
+  #       "secretsmanager:DescribeSecret",
+  #       "secretsmanager:ListSecretVersionIds",
+  #       "secretsmanager:ListSecrets"
+  #     ]
+  #     resources = [
+  #       "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}root_ca_pub.pem*",
+  #       "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}confluence_cert*",
+  #       "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}confluence_cert_key*",
+  #       "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}bitbucket_cert*",
+  #       "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}bitbucket_cert_key*",
+  #       "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}jira1_cert*",
+  #       "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}jira1_cert_key*",
+  #       "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}bamboo_cert*",
+  #       "arn:${var.partition}:secretsmanager:${var.aws_region}:${local.mgmt_account_id}:secret:${var.ca_secrets_rootca_path}bamboo_cert_key*",
+  #     ]
+  #   }
 }
 
 resource "aws_iam_policy" "confluence_policy" {

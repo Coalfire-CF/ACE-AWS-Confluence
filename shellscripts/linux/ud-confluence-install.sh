@@ -50,22 +50,10 @@ chmod 644 /lib/systemd/system/confluence.service
 rm -f ~/confluence.bin
 rm -f ~/confluence.varfile
 
-# Setting Log Permissions
-# chmod 750 /opt/atlassian/confluence/logs/
-
 # # Enable and Start Confluence Service
 systemctl daemon-reload
 systemctl enable confluence.service
 systemctl start confluence.service
-
-# Install EFS Utils
-sudo yum -y install git rpm-build make
-git clone https://github.com/aws/efs-utils
-cd efs-utils
-make rpm
-sudo yum -y install build/amazon-efs-utils*rpm
-cd .
-
 
 # #import CA into keystore 
 aws secretsmanager get-secret-value --secret-id "/production/mgmt/ca/rootca/confluence_cert" --region ${aws_region} | jq -r '.SecretString' > certificates.pem
@@ -91,39 +79,25 @@ aws s3 cp s3://${install_s3_bucket}/${install_s3_bucket_folder}/web.xml /opt/atl
 chmod 644 /opt/atlassian/confluence/conf/server.xml
 chmod 644 /opt/atlassian/confluence/conf/web.xml
 
-#import jira CA cert
-aws secretsmanager get-secret-value --secret-id "/production/mgmt/ca/rootca/jira1_cert" --region ${aws_region} | jq -r '.SecretString' > jira-certificates.pem
-/opt/atlassian/confluence/jre/bin/keytool -import -alias jiraCA -file jira-certificates.pem -keystore confluence.jks -srcstorepass changeit -deststorepass changeit -noprompt
-/opt/atlassian/confluence/jre/bin/keytool -import -alias jiraCA -keystore /opt/atlassian/confluence/jre/lib/security/cacerts -file jira-certificates.pem -srcstorepass changeit -deststorepass changeit -noprompt
+#####
+#Uncomment if deploying the rest of the Atlassian Stack
+############
+# #import jira CA cert
+# aws secretsmanager get-secret-value --secret-id "/production/mgmt/ca/rootca/jira1_cert" --region ${aws_region} | jq -r '.SecretString' > jira-certificates.pem
+# /opt/atlassian/confluence/jre/bin/keytool -import -alias jiraCA -file jira-certificates.pem -keystore confluence.jks -srcstorepass changeit -deststorepass changeit -noprompt
+# /opt/atlassian/confluence/jre/bin/keytool -import -alias jiraCA -keystore /opt/atlassian/confluence/jre/lib/security/cacerts -file jira-certificates.pem -srcstorepass changeit -deststorepass changeit -noprompt
 
-#import bamboo
-aws secretsmanager get-secret-value --secret-id "/production/mgmt/ca/rootca/bamboo_cert" --region ${aws_region} | jq -r '.SecretString' > bamboo-certificates.pem
-/opt/atlassian/confluence/jre/bin/keytool -import -alias bambooCA -file bamboo-certificates.pem -keystore confluence.jks -srcstorepass changeit -deststorepass changeit -noprompt
-/opt/atlassian/confluence/jre/bin/keytool -import -alias bambooCA -keystore /opt/atlassian/confluence/jre/lib/security/cacerts -file bamboo-certificates.pem -srcstorepass changeit -deststorepass changeit -noprompt
+# #import bamboo
+# aws secretsmanager get-secret-value --secret-id "/production/mgmt/ca/rootca/bamboo_cert" --region ${aws_region} | jq -r '.SecretString' > bamboo-certificates.pem
+# /opt/atlassian/confluence/jre/bin/keytool -import -alias bambooCA -file bamboo-certificates.pem -keystore confluence.jks -srcstorepass changeit -deststorepass changeit -noprompt
+# /opt/atlassian/confluence/jre/bin/keytool -import -alias bambooCA -keystore /opt/atlassian/confluence/jre/lib/security/cacerts -file bamboo-certificates.pem -srcstorepass changeit -deststorepass changeit -noprompt
 
-#import bitbucket
-aws secretsmanager get-secret-value --secret-id "/production/mgmt/ca/rootca/bitbucket_cert" --region ${aws_region} | jq -r '.SecretString' > bitbucket-certificates.pem
-/opt/atlassian/confluence/jre/bin/keytool -import -alias bitbucketCA -file bitbucket-certificates.pem -keystore confluence.jks -srcstorepass changeit -deststorepass changeit -noprompt 
-/opt/atlassian/confluence/jre/bin/keytool -import -alias bitbucketCA -keystore /opt/atlassian/confluence/jre/lib/security/cacerts -file bitbucket-certificates.pem -srcstorepass changeit -deststorepass changeit -noprompt
+# #import bitbucket
+# aws secretsmanager get-secret-value --secret-id "/production/mgmt/ca/rootca/bitbucket_cert" --region ${aws_region} | jq -r '.SecretString' > bitbucket-certificates.pem
+# /opt/atlassian/confluence/jre/bin/keytool -import -alias bitbucketCA -file bitbucket-certificates.pem -keystore confluence.jks -srcstorepass changeit -deststorepass changeit -noprompt 
+# /opt/atlassian/confluence/jre/bin/keytool -import -alias bitbucketCA -keystore /opt/atlassian/confluence/jre/lib/security/cacerts -file bitbucket-certificates.pem -srcstorepass changeit -deststorepass changeit -noprompt
 
-
+#Reboot instance to verify that service presist through reboot.
 reboot
-
-# # This part will need to be done manually after you obtain the License and choose data center installation.
-
-# # Create New Shared-Home Directory and Mount EFS
-# sudo mv /var/atlassian/application-data/confluence/shared-home /var/atlassian/application-data/confluence/shared-home-bak
-# sudo mkdir /var/atlassian/application-data/confluence/shared-home
-# sudo chown confluence:confluence /var/atlassian/application-data/confluence/shared-home
-
-# # Mount EFS to Shared-Home
-# sudo mount -t efs -o tls fs-06043e66178f890c7:/ /var/atlassian/application-data/confluence/shared-home
-
-# # Copy over old Shared-Home Files To New Shared-Home.
-# sudo cp -pR /var/atlassian/application-data/confluence/shared-home-bak/. /var/atlassian/application-data/confluence/shared-home/
-# sudo rm -fR /var/atlassian/application-data/confluence/shared-home-bak
-
-# # This will auto mount the EFS file share.
-# fs-0d648ed5ec53b45d0:/ /var/atlassian/application-data/confluence/shared-home efs _netdev,noresvport,tls,iam 0 0
 
 

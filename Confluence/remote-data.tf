@@ -5,8 +5,8 @@ data "terraform_remote_state" "setup" {
   config = {
     bucket  = "${var.resource_prefix}-${var.aws_region}-tf-state"
     region  = var.aws_region
-    key     = "imatch-us-gov-west-1-tfsetup.tfstate"
-    profile = "imatch-mgmt"
+    key     = "launchpad-us-gov-west-1-tfsetup.tfstate"
+    profile = "launchpad-mgmt"
   }
 }
 
@@ -17,8 +17,8 @@ data "terraform_remote_state" "network-mgmt" {
   config = {
     bucket  = "${var.resource_prefix}-${var.aws_region}-tf-state"
     region  = var.aws_region
-    key     = "imatch-us-gov-west-1-network-mgmt.tfstate"
-    profile = "imatch-mgmt"
+    key     = "launchpad-us-gov-west-1-network-mgmt.tfstate"
+    profile = "launchpad-mgmt"
   }
 }
 
@@ -29,8 +29,8 @@ data "terraform_remote_state" "active-directory" {
   config = {
     bucket  = "${var.resource_prefix}-${var.aws_region}-tf-state"
     region  = var.aws_region
-    key     = "imatch-us-gov-west-1-active-directory.tfstate"
-    profile = "imatch-mgmt"
+    key     = "launchpad-us-gov-west-1-active-directory.tfstate"
+    profile = "launchpad-mgmt"
   }
 }
 
@@ -41,8 +41,8 @@ data "terraform_remote_state" "nessusburp" {
   config = {
     bucket  = "${var.resource_prefix}-${var.aws_region}-tf-state"
     region  = var.aws_region
-    key     = "imatch-us-gov-west-1-nessusburp.tfstate"
-    profile = "imatch-mgmt"
+    key     = "launchpad-us-gov-west-1-nessusburp.tfstate"
+    profile = "launchpad-mgmt"
   }
 }
 
@@ -53,7 +53,7 @@ data "terraform_remote_state" "jira" {
   config = {
     bucket  = "${var.resource_prefix}-${var.aws_region}-tf-state"
     region  = var.aws_region
-    key     = "imatch-us-gov-west-1-jira-state.tfstate"
-    profile = "imatch-mgmt"
+    key     = "launchpad-us-gov-west-1-jira-state.tfstate"
+    profile = "launchpad-mgmt"
   }
 }

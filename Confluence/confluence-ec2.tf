@@ -24,7 +24,7 @@ module "confluence" {
   }
 
   source            = "../../../../modules/aws-ec2"
-  name              = "confluence1"
+  name              = "confluence"
   instance_count    = 1
   ami               = data.aws_ami.rhel_gold_ami.id
   ec2_instance_type = "c5.xlarge"
@@ -47,6 +47,7 @@ module "confluence" {
   ]
 
   tags = {
+    Name = confluence
     OSFamily      = "RHEL8",
     OSType        = "Linux",
     App           = "Management",
@@ -56,7 +57,7 @@ module "confluence" {
   additional_security_groups = [
     aws_security_group.confluence_instance_sg.id,
     data.terraform_remote_state.network-mgmt.outputs.base_mgmt_linux_sg_id,
-    data.terraform_remote_state.jira.outputs.jira_app_links_sg
+    #data.terraform_remote_state.jira.outputs.jira_app_links_sg       ##### Uncomment if connecting Confluence to Jira
   ]
   cidr_security_group_rules = []
 
@@ -84,7 +85,7 @@ module "confluence" {
       },
       vars = {
         db_instance_endpoint = local.db_instance_endpoint,
-        identifier           = "confluence1",
+        identifier           = "confluence",
         db_port              = "5432"
         aws_region           = var.aws_region,
         db_password_path     = "${var.confluence_secrets_path}confluence_db_password",
@@ -100,8 +101,8 @@ module "confluence" {
       vars = {
         aws_region               = var.aws_region,
         domain_name              = var.domain_name,
-        confluence_dl_url        = "https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-7.19.3-x64.bin"
-        confluence_version       = "7.19.3"
+        confluence_dl_url        = "https://www.atlassian.com/software/confluence/downloads/binary/atlassian-confluence-7.19.6-x64.bin"
+        confluence_version       = "7.19.6"
         install_s3_bucket        = data.terraform_remote_state.setup.outputs.install_bucket_name,
         install_s3_bucket_folder = "confluence"
       }
