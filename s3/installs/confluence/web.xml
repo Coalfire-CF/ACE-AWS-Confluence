@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee
+                 http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd"
+         metadata-complete="true"
+         version="3.1">
+
+    <!--
+    Note that all Servlets and Filters are registered via the Java API.
+    See com.atlassian.confluence.impl.webapp.ServletsInitializer
+    -->
+
+    <display-name>Confluence</display-name>
+    <description>Confluence Web App</description>
+
+    <absolute-ordering>
+        <!-- Allow SpringServletContainerInitializer to be loaded -->
+        <name>spring_web</name>
+    </absolute-ordering>
+
+    <session-config>
+        <session-timeout>60</session-timeout>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
+    <welcome-file-list>
+        <welcome-file>default.jsp</welcome-file>
+        <welcome-file>index.action</welcome-file>
+    </welcome-file-list>
+
+    <!-- redirect all 500 errors to confluence error page -->
+    <error-page>
+        <error-code>500</error-code>
+        <location>/500page.jsp</location>
+    </error-page>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/fourohfour.action</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>com.atlassian.sal.api.permission.NotAuthenticatedException</exception-type>
+        <location>/login.action</location>
+    </error-page>
+    <error-page>
+        <exception-type>com.atlassian.sal.api.permission.AuthorisationException</exception-type>
+        <location>/notpermitted.action</location>
+    </error-page>
+
+    <security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Restricted URLs</web-resource-name>
+        <url-pattern>/</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+    </security-constraint>
+
+</web-app>
